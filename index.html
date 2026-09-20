@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Belajar Ceria</title>
+  <style>
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      margin: 0;
+      display: flex;
+      background-color: #fffbeb;
+      height: 100vh;
+    }
+    .sidebar {
+      width: 250px;
+      background: linear-gradient(180deg, #ffb037 0%, #ff6f00 100%);
+      color: white;
+      padding: 20px;
+      box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+    }
+    .sidebar h2 { font-size: 20px; text-align: center; margin-bottom: 30px; }
+    .sidebar ul { list-style: none; padding: 0; }
+    .sidebar li {
+      padding: 15px; margin-bottom: 10px; background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px; cursor: pointer; transition: 0.3s;
+    }
+    .sidebar li:hover { background: white; color: #ff6f00; font-weight: bold; transform: translateX(5px); }
+    .main-content { flex: 1; padding: 40px; overflow-y: auto; }
+    .page { display: none; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(255, 111, 0, 0.1); }
+    .page.active { display: block; }
+    h1, h2 { color: #d84315; }
+    .grid-jadwal { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
+    .hari-box { background: #fff8e1; border-left: 5px solid #ffb300; padding: 15px; border-radius: 8px; }
+    .hari-box.les { background: #fbe9e7; border-left: 5px solid #ff5722; }
+    .hari-box h3 { margin-top: 0; color: #e65100; }
+    .input-group { display: flex; gap: 10px; margin-top: 15px; }
+    input { flex: 1; padding: 12px; border: 2px solid #ffe082; border-radius: 8px; font-size: 16px; }
+    button { background: #ff8f00; color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+    button:hover { background: #ff6f00; }
+    .timer-display { font-size: 70px; font-weight: bold; color: #ff6f00; margin: 20px 0; }
+    canvas { border: 3px dashed #ffb300; background: #fafafa; border-radius: 10px; cursor: crosshair; }
+    .chat-box { height: 200px; border: 1px solid #ffe082; background: #fffdf7; padding: 15px; overflow-y: auto; border-radius: 8px; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <h2>🎯 Menu Belajar</h2>
+    <ul>
+      <li onclick="bukaHalaman('home')">🏠 Beranda</li>
+      <li onclick="bukaHalaman('jadwal')">📅 Jadwal & Les</li>
+      <li onclick="bukaHalaman('tabungan')">💰 Catatan Tabungan</li>
+      <li onclick="bukaHalaman('timer')">⏱️ Timer Belajar</li>
+      <li onclick="bukaHalaman('coretan')">🎨 Papan Coretan</li>
+      <li onclick="bukaHalaman('ai')">🤖 AI Pendamping</li>
+    </ul>
+  </div>
+
+  <div class="main-content">
+    <div id="home" class="page active">
+      <h1>Selamat Datang di Ruang Belajarmu! ✨</h1>
+      <p>Pilih menu di sebelah kiri untuk mulai mengelola jadwal, menabung, atau belajar bareng AI.</p>
+    </div>
+
+    <div id="jadwal" class="page">
+      <h2>📅 Jadwal Pelajaran Sekolah</h2>
+      <div class="grid-jadwal">
+        <div class="hari-box"><h3>Senin</h3><p>SENBUD, AGAMA, B ING WAJIB, MTK TL, B ING TL</p></div>
+        <div class="hari-box"><h3>Selasa</h3><p>EKONOMI, B ING TL, B ING WAJIB, PPKN</p></div>
+        <div class="hari-box"><h3>Rabu</h3><p>BMR, EKONOMI, FISIKA, MTK WAJIB</p></div>
+        <div class="hari-box"><h3>Kamis</h3><p>TKA, MTK TL, FISIKA, SEJARAH</p></div>
+        <div class="hari-box"><h3>Jumat</h3><p>BINDO, PJOK</p></div>
+      </div>
+      <h2 style="margin-top: 30px;">⏰ Jadwal Les</h2>
+      <div class="grid-jadwal">
+        <div class="hari-box les"><h3>Senin</h3><p>16:45 - 20:15</p></div>
+        <div class="hari-box les"><h3>Rabu</h3><p>16:45 - 20:15</p></div>
+        <div class="hari-box les"><h3>Jumat</h3><p>16:45 - 20:15</p></div>
+      </div>
+    </div>
+
+    <div id="tabungan" class="page">
+      <h2>💰 Catatan Tabungan Harian</h2>
+      <div class="input-group">
+        <input type="number" id="jumlahTabungan" placeholder="Masukkan jumlah uang (Rp)...">
+        <button onclick="tambahTabungan()">Simpan</button>
+      </div>
+      <h3>Riwayat Tabungan:</h3>
+      <ul id="listTabungan"></ul>
+    </div>
+
+    <div id="timer" class="page">
+      <h2>⏱️ Timer Belajar (25 Menit)</h2>
+      <div class="timer-display" id="waktuDisplay">25:00</div>
+      <div class="btn-group">
+        <button onclick="mulaiTimer()">Mulai</button>
+        <button onclick="jedaTimer()">Jeda</button>
+        <button onclick="resetTimer()">Reset</button>
+      </div>
+    </div>
+
+    <div id="coretan" class="page">
+      <h2>🎨 Papan Coret-Coret Belajar</h2>
+      <button onclick="bersihkanKanvas()" style="margin-bottom: 10px;">Hapus Semua</button><br>
+      <canvas id="kanvasCoret" width="500" height="350"></canvas>
+    </div>
+
+    <div id="ai" class="page">
+      <h2>🤖 Tanya AI Pendamping</h2>
+      <div class="chat-box" id="boxPesan">
+        <p class="ai-msg"><strong>AI:</strong> Halo! Ada materi sekolah atau rumus yang ingin kamu tanyakan hari ini?</p>
+      </div>
+      <div class="input-group">
+        <input type="text" id="inputTanya" placeholder="Tanyakan sesuatu...">
+        <button onclick="tanyaAI()">Kirim</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function bukaHalaman(idHalaman) {
+      let halaman = document.querySelectorAll('.page');
+      halaman.forEach(page => page.classList.remove('active'));
+      document.getElementById(idHalaman).classList.add('active');
+      if(idHalaman === 'coretan') { aktifkanKanvas(); }
+    }
+
+    function tambahTabungan() {
+      let input = document.getElementById('jumlahTabungan');
+      let list = document.getElementById('listTabungan');
+      if(input.value !== "") {
+        let li = document.createElement('li');
+        let tanggal = new Date().toLocaleDateString('id-ID');
+        li.innerHTML = `📅 <strong>${tanggal}</strong> — Menabung sebesar: <strong>Rp ${parseInt(input.value).toLocaleString('id-ID')}</strong>`;
+        list.appendChild(li);
+        input.value = "";
+      }
+    }
+
+    let waktuSisa = 25 * 60; let timerId = null;
+    function mulaiTimer() {
+      if (timerId !== null) return;
+      timerId = setInterval(() => {
+        waktuSisa--;
+        let menit = Math.floor(waktuSisa / 60); let detik = waktuSisa % 60;
+        document.getElementById('waktuDisplay').innerText = `${menit}:${detik < 10 ? '0' : ''}${detik}`;
+        if(waktuSisa <= 0) { clearInterval(timerId); alert("Waktu belajar selesai! Istirahat sejenak 🌟"); resetTimer(); }
+      }, 1000);
+    }
+    function jedaTimer() { clearInterval(timerId); timerId = null; }
+    function resetTimer() { jedaTimer(); waktuSisa = 25 * 60; document.getElementById('waktuDisplay').innerText = "25:00"; }
+
+    let kanvas, ctx, sedangMenggambar = false;
+    function aktifkanKanvas() {
+      kanvas = document.getElementById('kanvasCoret'); ctx = kanvas.getContext('2d');
+      ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.strokeStyle = '#333';
+      kanvas.onmousedown = () => sedangMenggambar = true;
+      kanvas.onmouseup = () => { ctx.beginPath(); sedangMenggambar = false; };
+      kanvas.onmousemove = menggambar;
+    }
+    function menggambar(e) {
+      if (!sedangMenggambar) return;
+      let rect = kanvas.getBoundingClientRect();
+      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top); ctx.stroke();
+    }
+    function bersihkanKanvas() { ctx.clearRect(0, 0, kanvas.width, kanvas.height); }
+
+    function tanyaAI() {
+      let input = document.getElementById('inputTanya'); let box = document.getElementById('boxPesan');
+      if(input.value !== "") {
+        box.innerHTML += `<p><strong>Kamu:</strong> ${input.value}</p>`;
+        setTimeout(() => {
+          box.innerHTML += `<p class="ai-msg" style="color:#e65100"><strong>AI:</strong> Pertanyaan bagus! Teruslah latih kodenya dan ingat untuk mengecek jadwal mata pelajaranmu ya! Semangat belajarnya! 🔥</p>`;
+          box.scrollTop = box.scrollHeight;
+        }, 800);
+        input.value = "";
+      }
+    }
+  </script>
+</body>
+</html>
