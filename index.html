@@ -11,13 +11,33 @@
       display: flex;
       background-color: #fffbeb;
       height: 100vh;
+      overflow: hidden;
     }
+    
+    /* Tombol Menu Khusus HP */
+    .menu-toggle {
+      display: none;
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      background: #ff6f00;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-weight: bold;
+      z-index: 1000;
+      cursor: pointer;
+    }
+
     .sidebar {
       width: 250px;
       background: linear-gradient(180deg, #ffb037 0%, #ff6f00 100%);
       color: white;
       padding: 20px;
       box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+      transition: 0.3s;
+      flex-shrink: 0;
     }
     .sidebar h2 { font-size: 20px; text-align: center; margin-bottom: 30px; }
     .sidebar ul { list-style: none; padding: 0; }
@@ -26,11 +46,12 @@
       border-radius: 10px; cursor: pointer; transition: 0.3s;
     }
     .sidebar li:hover { background: white; color: #ff6f00; font-weight: bold; transform: translateX(5px); }
-    .main-content { flex: 1; padding: 40px; overflow-y: auto; }
+    
+    .main-content { flex: 1; padding: 40px; overflow-y: auto; margin-top: 40px; }
     .page { display: none; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(255, 111, 0, 0.1); }
     .page.active { display: block; }
     h1, h2 { color: #d84315; }
-    .grid-jadwal { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
+    .grid-jadwal { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-top: 15px; }
     .hari-box { background: #fff8e1; border-left: 5px solid #ffb300; padding: 15px; border-radius: 8px; }
     .hari-box.les { background: #fbe9e7; border-left: 5px solid #ff5722; }
     .hari-box h3 { margin-top: 0; color: #e65100; }
@@ -38,22 +59,39 @@
     input { flex: 1; padding: 12px; border: 2px solid #ffe082; border-radius: 8px; font-size: 16px; }
     button { background: #ff8f00; color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; }
     button:hover { background: #ff6f00; }
-    .timer-display { font-size: 70px; font-weight: bold; color: #ff6f00; margin: 20px 0; }
-    canvas { border: 3px dashed #ffb300; background: #fafafa; border-radius: 10px; cursor: crosshair; }
-    .chat-box { height: 200px; border: 1px solid #ffe082; background: #fffdf7; padding: 15px; overflow-y: auto; border-radius: 8px; margin-bottom: 10px; }
+    .timer-display { font-size: 60px; font-weight: bold; color: #ff6f00; margin: 20px 0; }
+    canvas { border: 3px dashed #ffb300; background: #fafafa; border-radius: 10px; cursor: crosshair; max-width: 100%; height: auto; }
+    .chat-box { height: 180px; border: 1px solid #ffe082; background: #fffdf7; padding: 15px; overflow-y: auto; border-radius: 8px; margin-bottom: 10px; }
+
+    /* Pengaturan Otomatis untuk Layar HP */
+    @media (max-width: 768px) {
+      .menu-toggle { display: block; }
+      .sidebar {
+        position: fixed;
+        left: -290px;
+        top: 0;
+        bottom: 0;
+        z-index: 999;
+      }
+      .sidebar.open { left: 0; }
+      .main-content { padding: 20px; margin-top: 60px; }
+    }
   </style>
 </head>
 <body>
 
-  <div class="sidebar">
+  <!-- Tombol Menu Pemicu HP -->
+  <button class="menu-toggle" onclick="toggleMenu()">☰ Menu</button>
+
+  <div class="sidebar" id="mySidebar">
     <h2>🎯 Menu Belajar</h2>
     <ul>
-      <li onclick="bukaHalaman('home')">🏠 Beranda</li>
-      <li onclick="bukaHalaman('jadwal')">📅 Jadwal & Les</li>
-      <li onclick="bukaHalaman('tabungan')">💰 Catatan Tabungan</li>
-      <li onclick="bukaHalaman('timer')">⏱️ Timer Belajar</li>
-      <li onclick="bukaHalaman('coretan')">🎨 Papan Coretan</li>
-      <li onclick="bukaHalaman('ai')">🤖 AI Pendamping</li>
+      <li onclick="pilihMenu('home')">🏠 Beranda</li>
+      <li onclick="pilihMenu('jadwal')">📅 Jadwal & Les</li>
+      <li onclick="pilihMenu('tabungan')">💰 Catatan Tabungan</li>
+      <li onclick="pilledMenu('timer')">⏱️ Timer Belajar</li>
+      <li onclick="pilihMenu('coretan')">🎨 Papan Coretan</li>
+      <li onclick="pilihMenu('ai')">🤖 AI Pendamping</li>
     </ul>
   </div>
 
@@ -119,11 +157,19 @@
   </div>
 
   <script>
-    function bukaHalaman(idHalaman) {
+    // Fungsi Buka Tutup Menu khusus HP
+    function toggleMenu() {
+      document.getElementById('mySidebar').classList.toggle('open');
+    }
+
+    function pilihMenu(idHalaman) {
       let halaman = document.querySelectorAll('.page');
       halaman.forEach(page => page.classList.remove('active'));
       document.getElementById(idHalaman).classList.add('active');
       if(idHalaman === 'coretan') { aktifkanKanvas(); }
+      
+      // Otomatis menutup kembali menu setelah diklik di HP
+      document.getElementById('mySidebar').classList.remove('open');
     }
 
     function tambahTabungan() {
@@ -132,7 +178,7 @@
       if(input.value !== "") {
         let li = document.createElement('li');
         let tanggal = new Date().toLocaleDateString('id-ID');
-        li.innerHTML = `📅 <strong>${tanggal}</strong> — Menabung sebesar: <strong>Rp ${parseInt(input.value).toLocaleString('id-ID')}</strong>`;
+        li.innerHTML = `📅 <strong>${tanggal}</strong> — Menabung: <strong>Rp ${parseInt(input.value).toLocaleString('id-ID')}</strong>`;
         list.appendChild(li);
         input.value = "";
       }
@@ -155,15 +201,28 @@
     function aktifkanKanvas() {
       kanvas = document.getElementById('kanvasCoret'); ctx = kanvas.getContext('2d');
       ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.strokeStyle = '#333';
+      
+      // Mendukung sentuhan jari di layar HP
+      kanvas.addEventListener('touchstart', (e) => { sedangMenggambar = true; ctx.beginPath(); });
+      kanvas.addEventListener('touchend', () => sedangMenggambar = false);
+      kanvas.addEventListener('touchmove', (e) => {
+        if (!sedangMenggambar) return;
+        let rect = kanvas.getBoundingClientRect();
+        let touch = e.touches[0];
+        ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
+        ctx.stroke();
+        e.preventDefault();
+      });
+
       kanvas.onmousedown = () => sedangMenggambar = true;
       kanvas.onmouseup = () => { ctx.beginPath(); sedangMenggambar = false; };
-      kanvas.onmousemove = menggambar;
+      kanvas.onmousemove = (e) => {
+        if (!sedangMenggambar) return;
+        let rect = kanvas.getBoundingClientRect();
+        ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top); ctx.stroke();
+      };
     }
-    function menggambar(e) {
-      if (!sedangMenggambar) return;
-      let rect = kanvas.getBoundingClientRect();
-      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top); ctx.stroke();
-    }
+    
     function bersihkanKanvas() { ctx.clearRect(0, 0, kanvas.width, kanvas.height); }
 
     function tanyaAI() {
@@ -171,7 +230,7 @@
       if(input.value !== "") {
         box.innerHTML += `<p><strong>Kamu:</strong> ${input.value}</p>`;
         setTimeout(() => {
-          box.innerHTML += `<p class="ai-msg" style="color:#e65100"><strong>AI:</strong> Pertanyaan bagus! Teruslah latih kodenya dan ingat untuk mengecek jadwal mata pelajaranmu ya! Semangat belajarnya! 🔥</p>`;
+          box.innerHTML += `<p class="ai-msg" style="color:#e65100"><strong>AI:</strong> Pertanyaan bagus! Tetap semangat berlatih coding-nya ya! 🔥</p>`;
           box.scrollTop = box.scrollHeight;
         }, 800);
         input.value = "";
