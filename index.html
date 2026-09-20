@@ -1,229 +1,1356 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Iqbal AI — Asisten Pintar & Modern</title>
-  <style>
-    body {
-      font-family: 'Poppins', Arial, sans-serif;
-      margin: 0;
-      display: flex;
-      background-color: #fffbeb;
-      height: 100vh;
-      overflow: hidden;
-    }
-    .menu-toggle {
-      position: fixed;
-      top: 15px;
-      left: 15px;
-      background: #ff6f00;
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 8px;
-      font-weight: bold;
-      z-index: 1000;
-      cursor: pointer;
-    }
-    .sidebar {
-      width: 250px;
-      background: linear-gradient(180deg, #ffb037 0%, #ff6f00 100%);
-      color: white;
-      padding: 20px;
-      box-shadow: 4px 0 10px rgba(0,0,0,0.1);
-      transition: 0.3s;
-      flex-shrink: 0;
-      position: fixed;
-      left: -290px;
-      top: 0;
-      bottom: 0;
-      z-index: 999;
-    }
-    .sidebar.open { left: 0; }
-    .sidebar h2 { font-size: 20px; text-align: center; margin-bottom: 30px; margin-top: 50px; }
-    .sidebar ul { list-style: none; padding: 0; }
-    .sidebar li {
-      padding: 15px; margin-bottom: 10px; background: rgba(255, 255, 255, 0.1);
-      border-radius: 10px; cursor: pointer; transition: 0.3s;
-    }
-    .sidebar li:hover { background: white; color: #ff6f00; font-weight: bold; transform: translateX(5px); }
-    .main-content { flex: 1; padding: 20px; overflow-y: auto; margin-top: 60px; }
-    .page { display: none; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(255, 111, 0, 0.1); }
-    .page.active { display: block; }
-    h1, h2 { color: #d84315; margin-top: 0; }
-    .grid-jadwal { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-top: 15px; }
-    .hari-box { background: #fff8e1; border-left: 5px solid #ffb300; padding: 15px; border-radius: 8px; }
-    .hari-box.les { background: #fbe9e7; border-left: 5px solid #ff5722; }
-    .hari-box h3 { margin-top: 0; color: #e65100; }
-    .input-group { display: flex; gap: 10px; margin-top: 15px; }
-    input { flex: 1; padding: 12px; border: 2px solid #ffe082; border-radius: 8px; font-size: 16px; }
-    button { background: #ff8f00; color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-    button:hover { background: #ff6f00; }
-    .timer-display { font-size: 60px; font-weight: bold; color: #ff6f00; margin: 20px 0; }
-    canvas { border: 3px dashed #ffb300; background: #fafafa; border-radius: 10px; cursor: crosshair; max-width: 100%; height: auto; }
-    .chat-box {
-      height: 300px;
-      border: 2px solid #ffe082;
-      background: #fffdf7;
-      padding: 15px;
-      overflow-y: auto;
-      border-radius: 12px;
-      margin-bottom: 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .msg { padding: 10px 15px; border-radius: 10px; max-width: 80%; word-wrap: break-word; line-height: 1.4; }
-    .user-msg { background: #ffe082; color: #5d4037; align-self: flex-end; }
-    .ai-msg { background: #fbe9e7; color: #d84315; align-self: flex-start; border-left: 4px solid #ff5722; }
-    @media (min-width: 769px) {
-      .sidebar { position: static; left: 0; }
-      .main-content { margin-top: 0; padding: 40px; }
-      .menu-toggle { display: none; }
-      .sidebar h2 { margin-top: 0; }
-    }
-  </style>
-</head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Iqbal Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sun: #FFC93C;
+    --sun-soft: #FFE27A;
+    --amber: #FFB000;
+    --orange: #FF8A1F;
+    --orange-deep: #E5610A;
+    --peach: #FFF3E0;
+    --peach-line: #FFE2B8;
+    --pink-soft: #FFD9D0;
+    --ink: #3B2A14;
+    --ink-soft: #7A6244;
+    --white: #FFFFFF;
+    --sidebar-w: 264px;
+    --topbar-h: 58px;
+    --font-display: "Baloo 2", "Trebuchet MS", system-ui, sans-serif;
+    --font-body: "Nunito", "Segoe UI", system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: var(--font-body);
+    color: var(--ink);
+    background: var(--white);
+    line-height: 1.55;
+    -webkit-tap-highlight-color: transparent;
+  }
+  button { font-family: inherit; cursor: pointer; }
+  button:focus-visible, input:focus-visible, textarea:focus-visible {
+    outline: 3px solid var(--orange);
+    outline-offset: 2px;
+  }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: var(--sidebar-w);
+    background: var(--peach);
+    border-right: 3px solid var(--sun);
+    display: flex;
+    flex-direction: column;
+    padding: 22px 16px;
+    z-index: 200;
+    overflow-y: auto;
+    transition: transform .28s ease;
+  }
+  .brand {
+    display: flex; align-items: center; gap: 12px;
+    padding: 4px 8px 22px;
+  }
+  .brand-mark {
+    width: 46px; height: 46px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #FFE98F, var(--amber) 60%, var(--orange));
+    display: grid; place-items: center;
+    font-size: 24px;
+    box-shadow: 0 0 0 4px rgba(255, 201, 60, .35);
+    flex-shrink: 0;
+  }
+  .brand-name { font-family: var(--font-display); font-weight: 800; font-size: 22px; line-height: 1.1; }
+  .brand-sub { font-size: 13px; color: var(--ink-soft); }
+
+  .nav { display: flex; flex-direction: column; gap: 6px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 12px;
+    width: 100%;
+    padding: 12px 14px;
+    border: none; border-radius: 14px;
+    background: transparent;
+    color: var(--ink);
+    font-size: 16px; font-weight: 700;
+    text-align: left;
+    transition: background .18s, transform .18s;
+  }
+  .nav-item:hover { background: #FFE9BE; }
+  .nav-item.active {
+    background: linear-gradient(90deg, var(--sun), var(--orange));
+    color: #3B1E00;
+    box-shadow: 0 4px 12px rgba(255, 138, 31, .3);
+  }
+  .nav-item .ico { font-size: 20px; width: 26px; text-align: center; }
+
+  .sidebar-foot {
+    margin-top: auto;
+    padding: 16px 10px 0;
+    font-size: 13px; color: var(--ink-soft);
+  }
+
+  .backdrop {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(59, 42, 20, .45);
+    z-index: 150;
+  }
+
+  /* ---------- Topbar (HP) ---------- */
+  .topbar {
+    display: none;
+    position: fixed; top: 0; left: 0; right: 0;
+    height: var(--topbar-h);
+    background: var(--white);
+    border-bottom: 3px solid var(--sun);
+    align-items: center; gap: 12px;
+    padding: 0 14px;
+    z-index: 100;
+  }
+  .menu-btn {
+    border: none; border-radius: 12px;
+    background: linear-gradient(90deg, var(--sun), var(--orange));
+    color: #3B1E00;
+    font-size: 16px; font-weight: 800;
+    padding: 9px 16px;
+    box-shadow: 0 3px 8px rgba(255, 138, 31, .3);
+  }
+  .menu-btn:active { transform: scale(.96); }
+  .topbar-title { font-family: var(--font-display); font-weight: 800; font-size: 20px; }
+
+  /* ---------- Main ---------- */
+  .main {
+    margin-left: var(--sidebar-w);
+    min-height: 100%;
+    padding: 34px 40px 48px;
+  }
+  .page { display: none; max-width: 980px; margin: 0 auto; }
+  .page.active { display: block; }
+
+  .page-head { margin-bottom: 24px; }
+  .page-head h2 { font-family: var(--font-display); font-size: 34px; font-weight: 800; line-height: 1.15; }
+  .page-head p { color: var(--ink-soft); margin-top: 4px; }
+
+  .panel {
+    background: var(--white);
+    border: 2px solid var(--peach-line);
+    border-radius: 20px;
+    padding: 22px;
+  }
+
+  .btn {
+    border: none; border-radius: 12px;
+    padding: 11px 20px;
+    font-size: 16px; font-weight: 800;
+    background: linear-gradient(90deg, var(--sun), var(--orange));
+    color: #3B1E00;
+    transition: transform .12s, box-shadow .12s;
+    box-shadow: 0 3px 8px rgba(255, 138, 31, .28);
+  }
+  .btn:hover { box-shadow: 0 5px 14px rgba(255, 138, 31, .4); }
+  .btn:active { transform: scale(.96); }
+  .btn.ghost {
+    background: var(--white);
+    border: 2px solid var(--orange);
+    color: var(--orange-deep);
+    box-shadow: none;
+  }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+
+  /* ---------- Beranda ---------- */
+  .hero {
+    background: linear-gradient(120deg, var(--sun-soft) 0%, var(--sun) 45%, var(--orange) 100%);
+    border-radius: 26px;
+    padding: 36px 34px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 22px;
+  }
+  .hero::after {
+    content: "☀️";
+    position: absolute; right: 22px; top: 8px;
+    font-size: 110px; opacity: .55;
+    line-height: 1;
+  }
+  .hero h1 { font-family: var(--font-display); font-size: 42px; font-weight: 800; line-height: 1.1; max-width: 560px; }
+  .hero p { margin-top: 10px; font-size: 18px; font-weight: 600; max-width: 520px; }
+  .hero .date { margin-top: 16px; font-size: 14px; font-weight: 700; opacity: .8; }
+
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .stat h3 { font-family: var(--font-display); font-size: 18px; margin-bottom: 8px; }
+  .stat .big { font-family: var(--font-display); font-size: 30px; font-weight: 800; color: var(--orange-deep); line-height: 1.1; }
+  .stat .small { color: var(--ink-soft); font-size: 14px; margin-top: 6px; }
+  .stat ul { list-style: none; }
+  .stat li { padding: 3px 0; font-weight: 600; }
+
+  .quick { margin-top: 22px; }
+  .quick h3 { font-family: var(--font-display); font-size: 20px; margin-bottom: 12px; }
+  .quick-row { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip {
+    border: 2px solid var(--peach-line);
+    background: var(--peach);
+    border-radius: 999px;
+    padding: 9px 16px;
+    font-size: 15px; font-weight: 700;
+    color: var(--ink);
+    transition: background .15s, border-color .15s;
+  }
+  .chip:hover { background: var(--sun-soft); border-color: var(--sun); }
+
+  /* ---------- Chat ---------- */
+  .chat-wrap {
+    display: flex; flex-direction: column;
+    height: calc(100vh - 200px);
+    min-height: 420px;
+    padding: 0;
+    overflow: hidden;
+  }
+  .chat-log {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex; flex-direction: column; gap: 12px;
+    scroll-behavior: smooth;
+    background: #FFFDF7;
+  }
+  .bubble {
+    max-width: 78%;
+    padding: 11px 16px;
+    border-radius: 18px;
+    font-size: 16px;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+  }
+  .bubble.user {
+    align-self: flex-end;
+    background: var(--sun-soft);
+    border: 2px solid var(--sun);
+    border-bottom-right-radius: 5px;
+  }
+  .bubble.ai {
+    align-self: flex-start;
+    background: linear-gradient(135deg, #FFD3B8, var(--pink-soft));
+    border: 2px solid #FFB99A;
+    border-bottom-left-radius: 5px;
+  }
+  .bubble.err { background: #FFE0E0; border-color: #F5A5A5; }
+  .bubble { min-width: 0; }
+  .bubble.ai p { margin: 0 0 8px; }
+  .bubble.ai p:last-child { margin-bottom: 0; }
+  .bubble.ai h4 { font-family: var(--font-display); font-size: 17px; margin: 10px 0 4px; }
+  .bubble.ai ul, .bubble.ai ol { margin: 4px 0 8px 22px; }
+  .bubble.ai li { margin: 2px 0; }
+  .bubble.ai hr { border: none; border-top: 1px dashed #FFB99A; margin: 10px 0; }
+  .bubble.ai code { background: rgba(255, 255, 255, .7); padding: 1px 6px; border-radius: 6px; font-family: Consolas, "Courier New", monospace; font-size: 14px; }
+  .bubble.ai pre { background: var(--ink); color: var(--peach); padding: 12px 14px; border-radius: 12px; overflow-x: auto; margin: 8px 0; }
+  .bubble.ai pre code { background: transparent; padding: 0; color: inherit; font-size: 13.5px; white-space: pre; }
+  .bubble.ai a { color: var(--orange-deep); font-weight: 700; }
+  .tbl { overflow-x: auto; margin: 8px 0; }
+  .tbl table { border-collapse: collapse; font-size: 14px; background: rgba(255, 255, 255, .6); }
+  .tbl th, .tbl td { border: 1px solid #FFB99A; padding: 5px 10px; text-align: left; }
+  .tbl th { background: rgba(255, 201, 60, .5); }
+  .sources { margin-top: 10px; padding-top: 8px; border-top: 1px dashed #FFB99A; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 13px; }
+  .sources span { font-weight: 800; }
+  .sources a { background: #fff; border: 1px solid #FFB99A; border-radius: 999px; padding: 2px 10px; text-decoration: none; }
+  .head-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+  .btn.small { padding: 8px 14px; font-size: 14px; }
+  .dots span {
+    display: inline-block; width: 8px; height: 8px; margin: 0 2px;
+    background: var(--orange-deep); border-radius: 50%;
+    animation: bounce 1s infinite ease-in-out;
+  }
+  .dots span:nth-child(2) { animation-delay: .15s; }
+  .dots span:nth-child(3) { animation-delay: .3s; }
+  @keyframes bounce { 0%, 80%, 100% { transform: translateY(0); opacity: .5; } 40% { transform: translateY(-6px); opacity: 1; } }
+
+  .chat-form {
+    display: flex; gap: 10px;
+    padding: 14px;
+    border-top: 2px solid var(--peach-line);
+    background: var(--white);
+  }
+  .chat-form textarea {
+    flex: 1;
+    resize: none;
+    border: 2px solid var(--peach-line);
+    border-radius: 14px;
+    padding: 11px 14px;
+    font-family: inherit; font-size: 16px;
+    max-height: 120px;
+    color: var(--ink);
+  }
+
+  /* ---------- Jadwal ---------- */
+  .section-title { font-family: var(--font-display); font-size: 22px; margin: 6px 0 14px; }
+  .sched-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 16px; margin-bottom: 30px; }
+  .day-card {
+    background: var(--white);
+    border: 2px solid var(--peach-line);
+    border-radius: 18px;
+    overflow: hidden;
+  }
+  .day-card header {
+    background: linear-gradient(90deg, var(--sun), var(--amber));
+    padding: 10px 16px;
+    font-family: var(--font-display); font-weight: 800; font-size: 19px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .day-card.today { border-color: var(--orange); box-shadow: 0 0 0 4px rgba(255, 138, 31, .2); }
+  .day-card.today header { background: linear-gradient(90deg, var(--orange), var(--orange-deep)); color: #fff; }
+  .today-tag { font-size: 12px; font-family: var(--font-body); font-weight: 800; background: #fff; color: var(--orange-deep); padding: 2px 9px; border-radius: 999px; }
+  .day-card ol { list-style: none; padding: 10px 14px 14px; counter-reset: jam; }
+  .day-card li {
+    counter-increment: jam;
+    padding: 7px 0;
+    border-bottom: 1px dashed var(--peach-line);
+    font-weight: 700; font-size: 15px;
+    display: flex; gap: 10px;
+  }
+  .day-card li:last-child { border-bottom: none; }
+  .day-card li::before { content: counter(jam); color: var(--orange-deep); font-weight: 800; width: 16px; }
+  .les-card { background: var(--peach); border-color: var(--sun); }
+  .les-card header { background: linear-gradient(90deg, var(--orange), var(--sun)); }
+  .les-time { padding: 16px; font-family: var(--font-display); font-size: 26px; font-weight: 800; color: var(--orange-deep); }
+  .les-time small { display: block; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--ink-soft); }
+
+  /* ---------- Tabungan ---------- */
+  .save-form { display: flex; gap: 10px; flex-wrap: wrap; }
+  .save-form input {
+    flex: 1; min-width: 180px;
+    border: 2px solid var(--peach-line);
+    border-radius: 12px;
+    padding: 11px 14px;
+    font-family: inherit; font-size: 18px; font-weight: 700;
+    color: var(--ink);
+  }
+  .total-box {
+    margin: 18px 0;
+    padding: 18px 22px;
+    border-radius: 16px;
+    background: linear-gradient(120deg, var(--sun-soft), var(--sun));
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
+  }
+  .total-box span { font-weight: 700; }
+  .total-box strong { font-family: var(--font-display); font-size: 30px; font-weight: 800; }
+  .hint { font-size: 14px; color: var(--orange-deep); min-height: 20px; margin-top: 8px; font-weight: 700; }
+  .history { list-style: none; }
+  .history li {
+    display: flex; justify-content: space-between; align-items: center; gap: 10px;
+    padding: 12px 4px;
+    border-bottom: 1px dashed var(--peach-line);
+  }
+  .history .amt { font-weight: 800; font-size: 18px; color: var(--orange-deep); }
+  .history .when { font-size: 14px; color: var(--ink-soft); }
+  .history .del {
+    border: none; background: transparent; font-size: 18px; padding: 4px 8px; border-radius: 8px;
+  }
+  .history .del:hover { background: var(--pink-soft); }
+  .empty { color: var(--ink-soft); padding: 14px 4px; }
+
+  /* ---------- Timer ---------- */
+  .timer-panel { display: flex; flex-direction: column; align-items: center; padding: 34px 22px; }
+  .ring-wrap { position: relative; width: 260px; height: 260px; }
+  .ring-wrap svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .ring-bg { fill: none; stroke: var(--peach); stroke-width: 16; }
+  .ring-fg { fill: none; stroke: var(--orange); stroke-width: 16; stroke-linecap: round; transition: stroke-dashoffset .4s linear; }
+  .time-text {
+    position: absolute; inset: 0;
+    display: grid; place-items: center;
+    font-family: var(--font-display); font-weight: 800; font-size: 60px;
+  }
+  .timer-status { margin: 14px 0 20px; font-weight: 700; color: var(--ink-soft); min-height: 24px; text-align: center; }
+  .timer-btns { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+
+  /* ---------- Papan Coretan ---------- */
+  .tools { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-bottom: 14px; }
+  .swatches { display: flex; gap: 8px; }
+  .swatch {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 2px var(--peach-line);
+  }
+  .swatch.on { box-shadow: 0 0 0 3px var(--ink); }
+  .size-box { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 14px; }
+  .size-box input { accent-color: var(--orange); }
+  .board-wrap {
+    border: 3px solid var(--sun);
+    border-radius: 18px;
+    background: #fff;
+    overflow: hidden;
+    background-image: linear-gradient(var(--peach) 1px, transparent 1px);
+    background-size: 100% 32px;
+  }
+  #board { display: block; width: 100%; height: 440px; touch-action: none; cursor: crosshair; }
+
+  /* ---------- Responsif ---------- */
+  @media (max-width: 900px) {
+    .topbar { display: flex; }
+    .sidebar { transform: translateX(-100%); box-shadow: none; }
+    body.menu-open .sidebar { transform: translateX(0); box-shadow: 6px 0 24px rgba(0,0,0,.2); }
+    body.menu-open .backdrop { display: block; }
+    body.menu-open { overflow: hidden; }
+    .main { margin-left: 0; padding: calc(var(--topbar-h) + 20px) 16px 36px; }
+    .hero { padding: 26px 22px; }
+    .hero h1 { font-size: 30px; }
+    .hero::after { font-size: 70px; opacity: .4; }
+    .grid-3 { grid-template-columns: 1fr; }
+    .page-head h2 { font-size: 28px; }
+    .chat-wrap { height: calc(100vh - 190px); }
+    .bubble { max-width: 90%; }
+    #board { height: 380px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+  }
+</style> 
+  </head>
 <body>
 
-  <button class="menu-toggle" onclick="toggleMenu()">☰ Menu</button>
+<!-- Bar atas (khusus HP) -->
+<div class="topbar">
+  <button class="menu-btn" id="menuBtn" type="button" aria-label="Buka atau tutup menu" aria-expanded="false">☰ Menu</button>
+  <span class="topbar-title">Iqbal Dashboard</span>
+</div>
 
-  <div class="sidebar" id="mySidebar">
-    <h2>🎯 Iqbal Dashboard</h2>
-    <ul>
-      <li onclick="pilihMenu('home')">🏠 Beranda</li>
-      <li onclick="pilihMenu('ai')">🤖 Iqbal AI</li>
-      <li onclick="pilihMenu('jadwal')">📅 Jadwal & Les</li>
-      <li onclick="pilihMenu('tabungan')">💰 Catatan Tabungan</li>
-      <li onclick="pilihMenu('timer')">⏱️ Timer Belajar</li>
-      <li onclick="pilihMenu('coretan')">🎨 Papan Coretan</li>
-    </ul>
-  </div>
+<div class="backdrop" id="backdrop"></div>
 
-  <div class="main-content">
-    <div id="home" class="page active">
-      <h1>Selamat Datang di Ruang Belajarmu! ✨</h1>
-      <p>Gunakan menu di pojok atas untuk mengakses asisten super pintar <strong>Iqbal AI</strong>, mengecek jadwal pelajaran sekolah, atau berlatih coret-coret rumus.</p>
-    </div>
-
-    <div id="ai" class="page">
-      <h2>🤖 Iqbal AI — Sistem Pintar Real-Time</h2>
-      <div class="chat-box" id="boxPesan">
-        <div class="msg ai-msg"><strong>Iqbal AI:</strong> Halo! Aku adalah Iqbal AI yang sudah dibekali pengetahuan dunia terbaru secara penuh. Ada materi sekolah atau info dunia terkini yang ingin kamu tanyakan sekarang? 🔥</div>
-      </div>
-      <div class="input-group">
-        <input type="text" id="inputTanya" placeholder="Tanyakan materi sekolah atau info dunia terkini...">
-        <button id="btnKirim" onclick="tanyaIqbalAI()">Tanyakan</button>
-      </div>
-    </div>
-
-    <div id="jadwal" class="page">
-      <h2>📅 Jadwal Pelajaran Sekolah</h2>
-      <div class="grid-jadwal">
-        <div class="hari-box"><h3>Senin</h3><p>SENBUD, AGAMA, B ING WAJIB, MTK TL, B ING TL</p></div>
-        <div class="hari-box"><h3>Selasa</h3><p>EKONOMI, B ING TL, B ING WAJIB, PPKN</p></div>
-        <div class="hari-box"><h3>Rabu</h3><p>BMR, EKONOMI, FISIKA, MTK WAJIB</p></div>
-        <div class="hari-box"><h3>Kamis</h3><p>TKA, MTK TL, FISIKA, SEJARAH</p></div>
-        <div class="hari-box"><h3>Jumat</h3><p>BINDO, PJOK</p></div>
-      </div>
-      <h2 style="margin-top: 30px;">⏰ Jadwal Les</h2>
-      <div class="grid-jadwal">
-        <div class="hari-box les"><h3>Senin</h3><p>16:45 - 20:15</p></div>
-        <div class="hari-box les"><h3>Rabu</h3><p>16:45 - 20:15</p></div>
-        <div class="hari-box les"><h3>Jumat</h3><p>16:45 - 20:15</p></div>
-      </div>
-    </div>
-
-    <div id="tabungan" class="page">
-      <h2>💰 Catatan Tabungan Harian</h2>
-      <div class="input-group">
-        <input type="number" id="jumlahTabungan" placeholder="Masukkan jumlah uang (Rp)...">
-        <button onclick="tambahTabungan()">Simpan</button>
-      </div>
-      <h3>Riwayat Tabungan:</h3>
-      <ul id="listTabungan"></ul>
-    </div>
-
-    <div id="timer" class="page">
-      <h2>⏱️ Timer Belajar (25 Menit)</h2>
-      <div class="timer-display" id="waktuDisplay">25:00</div>
-      <button onclick="mulaiTimer()">Mulai</button>
-      <button onclick="jedaTimer()">Jeda</button>
-      <button onclick="resetTimer()">Reset</button>
-    </div>
-
-    <div id="coretan" class="page">
-      <h2>🎨 Papan Coret-Coret Belajar</h2>
-      <button onclick="bersihkanKanvas()" style="margin-bottom: 10px;">Hapus Semua</button><br>
-      <canvas id="kanvasCoret" width="500" height="350"></canvas>
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="brand-mark">⚡</div>
+    <div>
+      <div class="brand-name">Iqbal Dashboard</div>
+      <div class="brand-sub">Ruang belajarku</div>
     </div>
   </div>
+  <nav class="nav">
+    <button class="nav-item active" type="button" data-page="beranda"><span class="ico">🏠</span>Beranda</button>
+    <button class="nav-item" type="button" data-page="ai"><span class="ico">🤖</span>Iqbal AI</button>
+    <button class="nav-item" type="button" data-page="jadwal"><span class="ico">📅</span>Jadwal &amp; Les</button>
+    <button class="nav-item" type="button" data-page="tabungan"><span class="ico">💰</span>Catatan Tabungan</button>
+    <button class="nav-item" type="button" data-page="timer"><span class="ico">⏱️</span>Timer Belajar</button>
+    <button class="nav-item" type="button" data-page="papan"><span class="ico">🎨</span>Papan Coretan</button>
+  </nav>
+  <div class="sidebar-foot">Semangat belajar hari ini! 🌟</div>
+</aside>
 
-  <script>
-    function toggleMenu() { document.getElementById('mySidebar').classList.toggle('open'); }
-    function pilihMenu(idHalaman) {
-      let halaman = document.querySelectorAll('.page');
-      halaman.forEach(page => page.classList.remove('active'));
-      document.getElementById(idHalaman).classList.add('active');
-      if(idHalaman === 'coretan') { aktifkanKanvas(); }
-      document.getElementById('mySidebar').classList.remove('open');
+<main class="main">
+
+  <!-- ========== BERANDA ========== -->
+  <section class="page active" id="page-beranda">
+    <div class="hero">
+      <h1 id="greeting">Halo, Iqbal!</h1>
+      <p>Hari baru, energi baru. Yuk mulai belajar dan selesaikan targetmu hari ini.</p>
+      <div class="date" id="todayDate"></div>
+    </div>
+
+    <div class="grid-3">
+      <div class="panel stat">
+        <h3>📅 Pelajaran hari ini</h3>
+        <ul id="homeLessons"></ul>
+      </div>
+      <div class="panel stat">
+        <h3>💰 Total tabungan</h3>
+        <div class="big" id="homeTotal">Rp 0</div>
+        <div class="small">Terus menabung sedikit demi sedikit.</div>
+      </div>
+      <div class="panel stat">
+        <h3>⏱️ Fokus 25 menit</h3>
+        <div class="big">Pomodoro</div>
+        <div class="small">Belajar fokus, lalu istirahat sebentar.</div>
+      </div>
+    </div>
+
+    <div class="quick">
+      <h3>Mau ke mana dulu?</h3>
+      <div class="quick-row">
+        <button class="chip" type="button" data-page="ai">🤖 Tanya Iqbal AI</button>
+        <button class="chip" type="button" data-page="jadwal">📅 Lihat jadwal</button>
+        <button class="chip" type="button" data-page="tabungan">💰 Catat tabungan</button>
+        <button class="chip" type="button" data-page="timer">⏱️ Mulai timer</button>
+        <button class="chip" type="button" data-page="papan">🎨 Corat-coret rumus</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== IQBAL AI ========== -->
+  <section class="page" id="page-ai">
+    <div class="page-head head-row">
+      <div>
+        <h2>🤖 Iqbal AI</h2>
+        <p>Tanya apa saja. Jawabannya cerdas dan selalu terbaru dari internet.</p>
+      </div>
+      <button class="btn ghost small" id="newChatBtn" type="button">＋ Chat baru</button>
+    </div>
+    <div class="panel chat-wrap">
+      <div class="chat-log" id="chatLog">
+        <div class="bubble ai">Halo Iqbal! 👋 Aku Iqbal AI. Tanya apa saja: pelajaran, coding, berita terbaru, sampai solusi masalah sehari-hari. Untuk info terkini, aku mencari langsung di internet.</div>
+      </div>
+      <div class="chat-form">
+        <textarea id="chatInput" rows="1" placeholder="Tanya apa saja, misalnya: berita terbaru hari ini..."></textarea>
+        <button class="btn" id="sendBtn" type="button">Kirim</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== JADWAL ========== -->
+  <section class="page" id="page-jadwal">
+    <div class="page-head">
+      <h2>📅 Jadwal &amp; Les</h2>
+      <p>Jadwal sekolah dan jadwal les mingguanmu.</p>
+    </div>
+
+    <h3 class="section-title">Jadwal Sekolah</h3>
+    <div class="sched-grid" id="schoolGrid"></div>
+
+    <h3 class="section-title">Jadwal Les</h3>
+    <div class="sched-grid" id="lesGrid"></div>
+  </section>
+
+  <!-- ========== TABUNGAN ========== -->
+  <section class="page" id="page-tabungan">
+    <div class="page-head">
+      <h2>💰 Catatan Tabungan</h2>
+      <p>Catat setiap kali kamu menabung. Tanggal dan jam terisi otomatis.</p>
+    </div>
+    <div class="panel">
+      <div class="save-form">
+        <input type="number" id="saveAmount" min="1" step="any" inputmode="numeric" placeholder="Nominal, contoh: 5000">
+        <button class="btn" id="saveBtn" type="button">Simpan</button>
+      </div>
+      <div class="hint" id="saveHint"></div>
+
+      <div class="total-box">
+        <span>Total tabungan</span>
+        <strong id="saveTotal">Rp 0</strong>
+      </div>
+
+      <h3 class="section-title">Riwayat menabung</h3>
+      <ul class="history" id="historyList"></ul>
+    </div>
+  </section>
+
+  <!-- ========== TIMER ========== -->
+  <section class="page" id="page-timer">
+    <div class="page-head">
+      <h2>⏱️ Timer Belajar</h2>
+      <p>Metode Pomodoro: fokus 25 menit tanpa gangguan.</p>
+    </div>
+    <div class="panel timer-panel">
+      <div class="ring-wrap">
+        <svg viewBox="0 0 200 200">
+          <circle class="ring-bg" cx="100" cy="100" r="88"></circle>
+          <circle class="ring-fg" id="ringFg" cx="100" cy="100" r="88"></circle>
+        </svg>
+        <div class="time-text" id="timeText">25:00</div>
+      </div>
+      <div class="timer-status" id="timerStatus">Siap mulai belajar?</div>
+      <div class="timer-btns">
+        <button class="btn" id="startBtn" type="button">▶ Mulai</button>
+        <button class="btn ghost" id="pauseBtn" type="button">⏸ Jeda</button>
+        <button class="btn ghost" id="resetBtn" type="button">↺ Reset</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== PAPAN CORETAN ========== -->
+  <section class="page" id="page-papan">
+    <div class="page-head">
+      <h2>🎨 Papan Coretan</h2>
+      <p>Corat-coret rumus pakai mouse atau jari langsung di layar.</p>
+    </div>
+    <div class="tools">
+      <div class="swatches" id="swatches">
+        <button type="button" class="swatch on" data-color="#3B2A14" style="background:#3B2A14" aria-label="Cokelat tua"></button>
+        <button type="button" class="swatch" data-color="#E5610A" style="background:#E5610A" aria-label="Jingga"></button>
+        <button type="button" class="swatch" data-color="#F2A900" style="background:#F2A900" aria-label="Kuning"></button>
+        <button type="button" class="swatch" data-color="#D6336C" style="background:#D6336C" aria-label="Merah muda"></button>
+        <button type="button" class="swatch" data-color="#1C7ED6" style="background:#1C7ED6" aria-label="Biru"></button>
+      </div>
+      <label class="size-box">Tebal
+        <input type="range" id="penSize" min="1" max="16" value="3">
+      </label>
+      <button class="btn ghost" id="clearBtn" type="button">Hapus Semua</button>
+    </div>
+    <div class="board-wrap">
+      <canvas id="board"></canvas>
+    </div>
+  </section>
+
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  /* =====================================================
+     Pengaturan
+     ===================================================== */
+  var API_KEY = "AIzaSyA_NzJkZ5U1F6NFpqME1pWHp4T1h0X2oxT1lz";
+  var ATTEMPTS = [
+    { model: "gemini-2.5-flash", search: true },
+    { model: "gemini-2.0-flash", search: true },
+    { model: "gemini-2.5-flash", search: false },
+    { model: "gemini-2.0-flash", search: false }
+  ];
+
+  var SCHOOL = [
+    { day: "Senin",  items: ["SENBUD", "AGAMA", "B ING WAJIB", "MTK TL", "B ING TL"] },
+    { day: "Selasa", items: ["EKONOMI", "B ING TL", "B ING WAJIB", "PPKN"] },
+    { day: "Rabu",   items: ["BMR", "EKONOMI", "FISIKA", "MTK WAJIB"] },
+    { day: "Kamis",  items: ["TKA", "MTK TL", "FISIKA", "SEJARAH"] },
+    { day: "Jumat",  items: ["BINDO", "PJOK"] }
+  ];
+  var LES = ["Senin", "Rabu", "Jumat"];
+  var DAY_NAMES = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+
+  /* =====================================================
+     Helper
+     ===================================================== */
+  function $(id) { return document.getElementById(id); }
+
+  function rupiah(n) {
+    return "Rp " + Number(n).toLocaleString("id-ID");
+  }
+
+  function storageGet(key, fallback) {
+    try {
+      var raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : fallback;
+    } catch (e) { return fallback; }
+  }
+  function storageSet(key, value) {
+    try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* abaikan */ }
+  }
+
+  /* =====================================================
+     Navigasi halaman + menu HP
+     ===================================================== */
+  var body = document.body;
+  var menuBtn = $("menuBtn");
+
+  function openMenu() {
+    body.classList.add("menu-open");
+    menuBtn.setAttribute("aria-expanded", "true");
+  }
+  function closeMenu() {
+    body.classList.remove("menu-open");
+    menuBtn.setAttribute("aria-expanded", "false");
+  }
+  function toggleMenu() {
+    if (body.classList.contains("menu-open")) { closeMenu(); } else { openMenu(); }
+  }
+
+  function showPage(name) {
+    var pages = document.querySelectorAll(".page");
+    for (var i = 0; i < pages.length; i++) {
+      pages[i].classList.toggle("active", pages[i].id === "page-" + name);
+    }
+    var navs = document.querySelectorAll(".nav-item");
+    for (var j = 0; j < navs.length; j++) {
+      navs[j].classList.toggle("active", navs[j].getAttribute("data-page") === name);
+    }
+    closeMenu();
+    window.scrollTo(0, 0);
+
+    if (name === "papan") { setupCanvas(); }
+    if (name === "ai") { scrollChat(); }
+    if (name === "beranda") { renderHome(); }
+  }
+
+  var pageButtons = document.querySelectorAll("[data-page]");
+  for (var i = 0; i < pageButtons.length; i++) {
+    pageButtons[i].addEventListener("click", function () {
+      showPage(this.getAttribute("data-page"));
+    });
+  }
+
+  menuBtn.addEventListener("click", toggleMenu);
+  $("backdrop").addEventListener("click", closeMenu);
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") { closeMenu(); }
+  });
+  window.addEventListener("resize", function () {
+    if (window.innerWidth > 900) { closeMenu(); }
+  });
+
+  /* =====================================================
+     Beranda
+     ===================================================== */
+  function renderHome() {
+    var now = new Date();
+    var h = now.getHours();
+    var sapa = h < 11 ? "Selamat pagi" : h < 15 ? "Selamat siang" : h < 18 ? "Selamat sore" : "Selamat malam";
+    $("greeting").textContent = sapa + ", Iqbal! ✨";
+    $("todayDate").textContent = now.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+
+    var todayName = DAY_NAMES[now.getDay()];
+    var list = $("homeLessons");
+    list.innerHTML = "";
+    var found = null;
+    for (var k = 0; k < SCHOOL.length; k++) {
+      if (SCHOOL[k].day === todayName) { found = SCHOOL[k]; }
+    }
+    if (found) {
+      found.items.forEach(function (m) {
+        var li = document.createElement("li");
+        li.textContent = "• " + m;
+        list.appendChild(li);
+      });
+    } else {
+      var li = document.createElement("li");
+      li.textContent = "Tidak ada jadwal sekolah. Waktunya santai! 🎉";
+      list.appendChild(li);
     }
 
-    async function tanyaIqbalAI() {
-      let input = document.getElementById('inputTanya');
-      let box = document.getElementById('boxPesan');
-      let btn = document.getElementById('btnKirim');
-      let pertanyaan = input.value.trim();
-      
-      if(pertanyaan === "") return;
+    var total = 0;
+    savings.forEach(function (s) { total += Number(s.amount) || 0; });
+    $("homeTotal").textContent = rupiah(total);
+  }
 
-      box.innerHTML += `<div class="msg user-msg"><strong>Kamu:</strong> ${pertanyaan}</div>`;
-      input.value = "";
-      box.scrollTop = box.scrollHeight;
+  /* =====================================================
+     Iqbal AI (Gemini + Google Search)
+     ===================================================== */
+  var chatLog = $("chatLog");
+  var chatInput = $("chatInput");
+  var sendBtn = $("sendBtn");
+  var chatHistory = [];
+  var waiting = false;
+  var GREETING = "Halo Iqbal! 👋 Aku Iqbal AI. Tanya apa saja: pelajaran, coding, berita terbaru, sampai solusi masalah sehari-hari. Untuk info terkini, aku mencari langsung di internet.";
 
-      btn.innerText = "Berpikir...";
-      btn.disabled = true;
-      let aiDivId = "ai-" + Date.now();
-      box.innerHTML += `<div class="msg ai-msg" id="${aiDivId}"><strong>Iqbal AI:</strong> Menghubungkan ke server pusat...⏳</div>`;
-      box.scrollTop = box.scrollHeight;
+  function scrollChat() {
+    chatLog.scrollTop = chatLog.scrollHeight;
+  }
 
-      try {
-        let response = await fetch(`https://googleapis.com` + `JkZ5U1` + `F6NFpqM` + `E1pWHp` + `4T1h0X` + `2oxT1lz`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ contents: [{ parts: [{ text: "Kamu adalah 'Iqbal AI', asisten belajar pribadi cerdas, serba tahu, modern, ceria, dan selalu mengikuti tren dunia terkini. Jawablah pertanyaan user berikut dengan informatif namun tetap seru dan ceria: " + pertanyaan }] }] })
+  /* ---------- Tampilan jawaban (markdown sederhana & aman) ---------- */
+  function escapeHtml(s) {
+    return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  function inline(s) {
+    s = s.replace(/`([^`]+)`/g, "<code>$1</code>");
+    s = s.replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
+    s = s.replace(/(^|[^*])\*(?!\s)([^*\n]+?)\*(?!\*)/g, "$1<i>$2</i>");
+    s = s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
+      '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+    return s;
+  }
+
+  function renderBlocks(text) {
+    var lines = text.replace(/\r/g, "").split("\n");
+    var html = "";
+    var list = null;
+    var para = [];
+    var table = [];
+
+    function flushPara() {
+      if (para.length) { html += "<p>" + para.join("<br>") + "</p>"; para = []; }
+    }
+    function flushList() {
+      if (list) { html += "</" + list + ">"; list = null; }
+    }
+    function flushTable() {
+      if (!table.length) { return; }
+      var sep = /^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$/;
+      var rows = table.filter(function (r) { return !sep.test(r); });
+      var t = '<div class="tbl"><table>';
+      rows.forEach(function (r, idx) {
+        var cells = r.trim().replace(/^\||\|$/g, "").split("|");
+        t += "<tr>" + cells.map(function (c) {
+          var tag = idx === 0 ? "th" : "td";
+          return "<" + tag + ">" + inline(escapeHtml(c.trim())) + "</" + tag + ">";
+        }).join("") + "</tr>";
+      });
+      html += t + "</table></div>";
+      table = [];
+    }
+
+    for (var i = 0; i < lines.length; i++) {
+      var l = lines[i];
+
+      if (/^\s*\|.*\|\s*$/.test(l)) {
+        flushPara(); flushList();
+        table.push(l);
+        continue;
+      }
+      flushTable();
+
+      if (!l.trim()) { flushPara(); continue; }
+
+      var h = l.match(/^(#{1,4})\s+(.*)$/);
+      if (h) {
+        flushPara(); flushList();
+        html += "<h4>" + inline(escapeHtml(h[2])) + "</h4>";
+        continue;
+      }
+
+      if (/^\s*(-{3,}|\*{3,})\s*$/.test(l)) {
+        flushPara(); flushList();
+        html += "<hr>";
+        continue;
+      }
+
+      var ul = l.match(/^\s*[-*•]\s+(.*)$/);
+      var ol = l.match(/^\s*(\d+)[.)]\s+(.*)$/);
+      if (ul || ol) {
+        flushPara();
+        var kind = ul ? "ul" : "ol";
+        if (list !== kind) {
+          flushList();
+          html += kind === "ol" ? '<ol start="' + ol[1] + '">' : "<ul>";
+          list = kind;
+        }
+        html += "<li>" + inline(escapeHtml(ul ? ul[1] : ol[2])) + "</li>";
+        continue;
+      }
+
+      flushList();
+      para.push(inline(escapeHtml(l)));
+    }
+    flushTable();
+    flushPara();
+    flushList();
+    return html;
+  }
+
+  function renderMarkdown(text) {
+    var parts = text.split("```");
+    var out = [];
+    for (var i = 0; i < parts.length; i++) {
+      if (i % 2 === 1) {
+        var code = parts[i].replace(/^[a-zA-Z0-9+#_-]*\n/, "").replace(/\n$/, "");
+        out.push("<pre><code>" + escapeHtml(code) + "</code></pre>");
+      } else {
+        out.push(renderBlocks(parts[i]));
+      }
+    }
+    return out.join("");
+  }
+
+  function addBubble(text, who, isError, sources) {
+    var div = document.createElement("div");
+    div.className = "bubble " + who + (isError ? " err" : "");
+    if (who === "ai" && !isError) {
+      div.innerHTML = renderMarkdown(text);
+      if (sources && sources.length) {
+        var box = document.createElement("div");
+        box.className = "sources";
+        var label = document.createElement("span");
+        label.textContent = "Sumber:";
+        box.appendChild(label);
+        sources.forEach(function (s) {
+          var a = document.createElement("a");
+          a.href = s.uri;
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+          a.textContent = s.title;
+          box.appendChild(a);
         });
-        
-        let data = await response.json();
-        let teksJawaban = data.candidates.content.parts.text;
-        teksJawaban = teksJawaban.replace(/\*\*(.*?)\*\*/g, '$1').replace(/\*(.*?)\*/g, '$1');
-
-        document.getElementById(aiDivId).innerHTML = `<strong>Iqbal AI:</strong> ${teksJawaban}`;
-      } catch (error) {
-        document.getElementById(aiDivId).innerHTML = `<strong>Iqbal AI:</strong> Waduh maaf, koneksi otak pintarku sedang terganggu. Boleh coba tanyakan lagi? 🥺`;
+        div.appendChild(box);
       }
+    } else {
+      div.textContent = text;
+    }
+    chatLog.appendChild(div);
+    scrollChat();
+    return div;
+  }
 
-      btn.innerText = "Tanyakan";
-      btn.disabled = false;
-      box.scrollTop = box.scrollHeight;
+  function addTyping() {
+    var div = document.createElement("div");
+    div.className = "bubble ai";
+    div.innerHTML = '<span class="dots"><span></span><span></span><span></span></span>';
+    chatLog.appendChild(div);
+    scrollChat();
+    return div;
+  }
+
+  /* ---------- Permintaan ke Gemini ---------- */
+  function buildSystemPrompt() {
+    var now = new Date();
+    var tz = "";
+    try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (e) { /* abaikan */ }
+    var when = now.toLocaleString("id-ID", {
+      weekday: "long", day: "numeric", month: "long", year: "numeric",
+      hour: "2-digit", minute: "2-digit"
+    });
+    return "Kamu adalah Iqbal AI, asisten AI serba bisa di dalam Iqbal Dashboard milik Iqbal, seorang pelajar SMA. " +
+      "Kamu mampu menjawab pertanyaan tentang topik apa pun: pelajaran sekolah (matematika, fisika, ekonomi, sejarah, bahasa Indonesia, bahasa Inggris, dan lainnya), " +
+      "teknologi, coding, sains, kesehatan umum, keuangan, karier, hiburan, olahraga, berita, dan kehidupan sehari-hari. " +
+      "Aturan: " +
+      "1) Jawab dalam bahasa yang dipakai pengguna (utamanya bahasa Indonesia). " +
+      "2) Untuk informasi terkini (berita, harga, skor, cuaca, tokoh, rilis produk, peristiwa terbaru) gunakan Google Search agar jawabanmu mutakhir, " +
+      "jangan mengandalkan ingatan lama, dan sebutkan tanggalnya bila relevan. " +
+      "3) Langsung ke inti jawaban dulu, lalu beri penjelasan dan langkah solusi yang jelas dan praktis. " +
+      "Untuk soal hitungan, tunjukkan langkah demi langkah dan hasil akhir. Untuk coding, beri kode lengkap yang bisa dijalankan dalam blok kode. " +
+      "4) Tulis rumus matematika dengan teks biasa atau simbol Unicode (contoh: x², √2, a/b), jangan pakai LaTeX. " +
+      "5) Jika tidak yakin atau tidak tahu, katakan dengan jujur dan sarankan cara memeriksanya. Jangan mengarang. " +
+      "6) Untuk topik medis, hukum, atau keuangan, beri informasi yang bermanfaat dan saran singkat untuk menemui profesional bila perlu. " +
+      "7) Tolak dengan sopan hanya permintaan yang benar-benar berbahaya atau ilegal, dan tawarkan alternatif yang aman. " +
+      "Gaya: ramah, jelas, tidak bertele-tele; pakai daftar atau tabel bila membantu. " +
+      "Waktu sekarang di tempat pengguna: " + when + (tz ? " (" + tz + ")" : "") + ".";
+  }
+
+  function extractSources(cand) {
+    var out = [];
+    var seen = {};
+    var chunks = cand && cand.groundingMetadata && cand.groundingMetadata.groundingChunks;
+    if (!chunks) { return out; }
+    chunks.forEach(function (c) {
+      var w = c && c.web;
+      if (!w || !w.uri || !/^https?:\/\//i.test(w.uri)) { return; }
+      var title = w.title || w.uri;
+      if (seen[title] || out.length >= 5) { return; }
+      seen[title] = true;
+      out.push({ uri: w.uri, title: title });
+    });
+    return out;
+  }
+
+  function requestGemini(attempt) {
+    var url = "https://generativelanguage.googleapis.com/v1beta/models/" + attempt.model +
+              ":generateContent?key=" + API_KEY;
+    var payload = {
+      systemInstruction: { parts: [{ text: buildSystemPrompt() }] },
+      contents: chatHistory,
+      generationConfig: { temperature: 0.7, maxOutputTokens: 8192 }
+    };
+    if (attempt.search) { payload.tools = [{ google_search: {} }]; }
+
+    return fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }).then(function (res) {
+      return res.json().catch(function () { return {}; }).then(function (data) {
+        if (!res.ok) {
+          var err = new Error((data.error && data.error.message) || ("Kesalahan " + res.status));
+          err.status = res.status;
+          throw err;
+        }
+        var cand = data.candidates && data.candidates[0];
+        var parts = cand && cand.content && cand.content.parts;
+        var text = parts ? parts.map(function (p) { return p.text || ""; }).join("") : "";
+        if (!text.trim()) {
+          var empty = new Error("AI tidak memberi jawaban. Coba ulangi atau ubah pertanyaanmu.");
+          empty.status = 0;
+          throw empty;
+        }
+        return { text: text, sources: extractSources(cand) };
+      });
+    });
+  }
+
+  function callGemini() {
+    var i = 0;
+    var lastErr = null;
+    function next() {
+      if (i >= ATTEMPTS.length) { return Promise.reject(lastErr); }
+      var attempt = ATTEMPTS[i++];
+      return requestGemini(attempt).catch(function (err) {
+        lastErr = err;
+        if (err.status === 401 || err.status === 403 || /api key/i.test(err.message)) { throw err; }
+        return next();
+      });
+    }
+    return next();
+  }
+
+  function friendlyError(err) {
+    var m = (err && err.message) ? err.message : "Terjadi kesalahan yang tidak diketahui.";
+    if (err && (err.status === 401 || err.status === 403 || /api key/i.test(m))) {
+      return "API key ditolak (tidak valid, dibatasi domain, atau kuotanya habis). Periksa pengaturan key di Google AI Studio.";
+    }
+    if (err && (err.status === 429 || /quota|rate limit/i.test(m))) {
+      return "Kuota AI sedang penuh. Tunggu sebentar lalu coba lagi.";
+    }
+    if (err instanceof TypeError) {
+      return "Tidak bisa terhubung ke internet. Periksa koneksimu lalu coba lagi.";
+    }
+    return m;
+  }
+
+  function trimHistory() {
+    while (chatHistory.length > 24) { chatHistory.shift(); }
+    while (chatHistory.length && chatHistory[0].role !== "user") { chatHistory.shift(); }
+  }
+
+  function sendMessage() {
+    if (waiting) { return; }
+    var text = chatInput.value.trim();
+    if (!text) { return; }
+
+    addBubble(text, "user");
+    chatHistory.push({ role: "user", parts: [{ text: text }] });
+    trimHistory();
+    chatInput.value = "";
+    chatInput.style.height = "auto";
+
+    waiting = true;
+    sendBtn.disabled = true;
+    var typing = addTyping();
+
+    callGemini().then(function (result) {
+      typing.remove();
+      addBubble(result.text, "ai", false, result.sources);
+      chatHistory.push({ role: "model", parts: [{ text: result.text }] });
+    }).catch(function (err) {
+      typing.remove();
+      chatHistory.pop(); // buang pesan yang gagal agar riwayat tetap valid
+      addBubble("Maaf, ada masalah: " + friendlyError(err), "ai", true);
+    }).then(function () {
+      waiting = false;
+      sendBtn.disabled = false;
+      chatInput.focus();
+    });
+  }
+
+  function resetChat() {
+    if (waiting) { return; }
+    chatHistory = [];
+    chatLog.innerHTML = "";
+    addBubble(GREETING, "ai");
+  }
+
+  sendBtn.addEventListener("click", sendMessage);
+  $("newChatBtn").addEventListener("click", resetChat);
+  chatInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+  chatInput.addEventListener("input", function () {
+    this.style.height = "auto";
+    this.style.height = Math.min(this.scrollHeight, 120) + "px";
+  });
+
+  /* =====================================================
+     Jadwal & Les
+     ===================================================== */
+  function renderSchedule() {
+    var todayName = DAY_NAMES[new Date().getDay()];
+    var grid = $("schoolGrid");
+    grid.innerHTML = "";
+    SCHOOL.forEach(function (d) {
+      var card = document.createElement("div");
+      card.className = "day-card" + (d.day === todayName ? " today" : "");
+      var head = document.createElement("header");
+      var title = document.createElement("span");
+      title.textContent = d.day;
+      head.appendChild(title);
+      if (d.day === todayName) {
+        var tag = document.createElement("span");
+        tag.className = "today-tag";
+        tag.textContent = "Hari ini";
+        head.appendChild(tag);
+      }
+      var ol = document.createElement("ol");
+      d.items.forEach(function (m) {
+        var li = document.createElement("li");
+        li.textContent = m;
+        ol.appendChild(li);
+      });
+      card.appendChild(head);
+      card.appendChild(ol);
+      grid.appendChild(card);
+    });
+
+    var lg = $("lesGrid");
+    lg.innerHTML = "";
+    LES.forEach(function (day) {
+      var card = document.createElement("div");
+      card.className = "day-card les-card" + (day === todayName ? " today" : "");
+      card.innerHTML = '<header><span>' + day + '</span></header>' +
+        '<div class="les-time">16:45 – 20:15<small>Jadwal les</small></div>';
+      lg.appendChild(card);
+    });
+  }
+
+  /* =====================================================
+     Catatan Tabungan
+     ===================================================== */
+  var savings = storageGet("iqbal_savings", []);
+
+  function renderSavings() {
+    var list = $("historyList");
+    list.innerHTML = "";
+    var total = 0;
+    savings.forEach(function (s) { total += Number(s.amount) || 0; });
+    $("saveTotal").textContent = rupiah(total);
+
+    if (!savings.length) {
+      var e = document.createElement("li");
+      e.className = "empty";
+      e.textContent = "Belum ada catatan. Masukkan nominal lalu tekan Simpan.";
+      list.appendChild(e);
+      return;
     }
 
-    function tambahTabungan() {
-      let input = document.getElementById('jumlahTabungan');
-      let list = document.getElementById('listTabungan');
-      if(input.value !== "") {
-        let li = document.createElement('li');
-        let tanggal = new Date().toLocaleDateString('id-ID');
-        li.innerHTML = `📅 <strong>${tanggal}</strong> — Rp ${parseInt(input.value).toLocaleString('id-ID')}`;
-        list.appendChild(li); input.value = "";
-      }
-    }
+    for (var idx = savings.length - 1; idx >= 0; idx--) {
+      (function (index) {
+        var s = savings[index];
+        var li = document.createElement("li");
+        var left = document.createElement("div");
+        var amt = document.createElement("div");
+        amt.className = "amt";
+        amt.textContent = "+ " + rupiah(s.amount);
+        var when = document.createElement("div");
+        when.className = "when";
+        when.textContent = new Date(s.time).toLocaleString("id-ID", {
+          weekday: "long", day: "numeric", month: "long", year: "numeric",
+          hour: "2-digit", minute: "2-digit"
+        });
+        left.appendChild(amt);
+        left.appendChild(when);
 
-    let waktuSisa = 25 * 60; let timerId = null;
-    function mulaiTimer() {
-      if (timerId !== null) return;
-      timerId = setInterval(() => {
-        waktuSisa--;
-        let menit = Math.floor(waktuSisa / 60); let detik = waktuSisa % 60;
-        document.getElementById('waktuDisplay').innerText = `${menit}:${detik < 10 ? '0' : ''}${detik}`;
+        var del = document.createElement("button");
+        del.className = "del";
+        del.type = "button";
+        del.title = "Hapus catatan ini";
+        del.setAttribute("aria-label", "Hapus catatan ini");
+        del.textContent = "🗑️";
+        del.addEventListener("click", function () {
+          savings.splice(index, 1);
+          storageSet("iqbal_savings", savings);
+          renderSavings();
+        });
+
+        li.appendChild(left);
+        li.appendChild(del);
+        list.appendChild(li);
+      })(idx);
+    }
+  }
+
+  function saveMoney() {
+    var input = $("saveAmount");
+    var hint = $("saveHint");
+    var value = parseFloat(input.value);
+    if (!value || value <= 0) {
+      hint.textContent = "Masukkan nominal lebih dari 0 dulu ya.";
+      input.focus();
+      return;
+    }
+    savings.push({ amount: value, time: new Date().toISOString() });
+    storageSet("iqbal_savings", savings);
+    input.value = "";
+    hint.textContent = "Tersimpan! Hebat, terus menabung 💛";
+    renderSavings();
+    setTimeout(function () { hint.textContent = ""; }, 2500);
+  }
+
+  $("saveBtn").addEventListener("click", saveMoney);
+  $("saveAmount").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") { e.preventDefault(); saveMoney(); }
+  });
+
+  /* =====================================================
+     Timer Pomodoro (akurat pakai waktu selesai)
+     ===================================================== */
+  var TOTAL_SECONDS = 25 * 60;
+  var remaining = TOTAL_SECONDS;
+  var endTime = 0;
+  var tick = null;
+  var CIRC = 2 * Math.PI * 88;
+
+  var ringFg = $("ringFg");
+  ringFg.style.strokeDasharray = CIRC;
+  ringFg.style.strokeDashoffset = 0;
+
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+
+  function drawTimer() {
+    var m = Math.floor(remaining / 60);
+    var s = remaining % 60;
+    var label = pad(m) + ":" + pad(s);
+    $("timeText").textContent = label;
+    ringFg.style.strokeDashoffset = CIRC * (1 - remaining / TOTAL_SECONDS);
+    document.title = tick ? label + " · Iqbal Dashboard" : "Iqbal Dashboard";
+  }
+
+  function beep() {
+    try {
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      var ctx = new Ctx();
+      [0, 0.3, 0.6].forEach(function (delay) {
+        var o = ctx.createOscillator();
+        var g = ctx.createGain();
+        o.frequency.value = 880;
+        o.connect(g);
+        g.connect(ctx.destination);
+        g.gain.setValueAtTime(0.2, ctx.currentTime + delay);
+        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + 0.25);
+        o.start(ctx.currentTime + delay);
+        o.stop(ctx.currentTime + delay + 0.25);
+      });
+    } catch (e) { /* abaikan */ }
+  }
+
+  function stopTick() {
+    if (tick) { clearInterval(tick); tick = null; }
+  }
+
+  function onTick() {
+    remaining = Math.max(0, Math.round((endTime - Date.now()) / 1000));
+    drawTimer();
+    if (remaining <= 0) {
+      stopTick();
+      drawTimer();
+      $("timerStatus").textContent = "Selesai! Waktunya istirahat 5 menit 🎉";
+      $("startBtn").disabled = false;
+      beep();
+    }
+  }
+
+  $("startBtn").addEventListener("click", function () {
+    if (tick) { return; }
+    if (remaining <= 0) { remaining = TOTAL_SECONDS; }
+    endTime = Date.now() + remaining * 1000;
+    tick = setInterval(onTick, 250);
+    $("timerStatus").textContent = "Fokus! Kamu pasti bisa 💪";
+    $("startBtn").disabled = true;
+    onTick();
+  });
+
+  $("pauseBtn").addEventListener("click", function () {
+    if (!tick) { return; }
+    onTick();
+    stopTick();
+    $("timerStatus").textContent = "Dijeda. Tekan Mulai untuk lanjut.";
+    $("startBtn").disabled = false;
+    drawTimer();
+  });
+
+  $("resetBtn").addEventListener("click", function () {
+    stopTick();
+    remaining = TOTAL_SECONDS;
+    $("timerStatus").textContent = "Siap mulai belajar?";
+    $("startBtn").disabled = false;
+    drawTimer();
+  });
+
+  /* =====================================================
+     Papan Coretan
+     ===================================================== */
+  var canvas = $("board");
+  var ctx2d = canvas.getContext("2d");
+  var penColor = "#3B2A14";
+  var penSize = 3;
+  var drawing = false;
+  var lastX = 0, lastY = 0;
+  var lastW = 0, lastH = 0;
+
+  function setupCanvas() {
+    var rect = canvas.getBoundingClientRect();
+    if (rect.width === 0) { return; }
+    var dpr = window.devicePixelRatio || 1;
+    var w = Math.round(rect.width * dpr);
+    var h = Math.round(rect.height * dpr);
+    if (w === lastW && h === lastH) { return; }
+
+    var snapshot = null;
+    if (lastW > 0) {
+      snapshot = document.createElement("canvas");
+      snapshot.width = canvas.width;
+      snapshot.height = canvas.height;
+      snapshot.getContext("2d").drawImage(canvas, 0, 0);
+    }
+    canvas.width = w;
+    canvas.height = h;
+    lastW = w; lastH = h;
+    ctx2d.lineCap = "round";
+    ctx2d.lineJoin = "round";
+    if (snapshot) { ctx2d.drawImage(snapshot, 0, 0); }
+  }
+
+  function pos(e) {
+    var rect = canvas.getBoundingClientRect();
+    var dpr = canvas.width / rect.width;
+    return { x: (e.clientX - rect.left) * dpr, y: (e.clientY - rect.top) * dpr };
+  }
+
+  function dot(x, y) {
+    ctx2d.fillStyle = penColor;
+    ctx2d.beginPath();
+    ctx2d.arc(x, y, (penSize * (canvas.width / canvas.getBoundingClientRect().width)) / 2, 0, Math.PI * 2);
+    ctx2d.fill();
+  }
+
+  canvas.addEventListener("pointerdown", function (e) {
+    e.preventDefault();
+    setupCanvas();
+    drawing = true;
+    var p = pos(e);
+    lastX = p.x; lastY = p.y;
+    try { canvas.setPointerCapture(e.pointerId); } catch (err) { /* abaikan */ }
+    dot(p.x, p.y);
+  });
+
+  canvas.addEventListener("pointermove", function (e) {
+    if (!drawing) { return; }
+    e.preventDefault();
+    var p = pos(e);
+    ctx2d.strokeStyle = penColor;
+    ctx2d.lineWidth = penSize * (canvas.width / canvas.getBoundingClientRect().width);
+    ctx2d.beginPath();
+    ctx2d.moveTo(lastX, lastY);
+    ctx2d.lineTo(p.x, p.y);
+    ctx2d.stroke();
+    lastX = p.x; lastY = p.y;
+  });
+
+  function endDraw(e) {
+    if (!drawing) { return; }
+    drawing = false;
+    try { canvas.releasePointerCapture(e.pointerId); } catch (err) { /* abaikan */ }
+  }
+  canvas.addEventListener("pointerup", endDraw);
+  canvas.addEventListener("pointercancel", endDraw);
+  canvas.addEventListener("pointerleave", function (e) {
+    if (e.pointerType === "mouse") { endDraw(e); }
+  });
+
+  // Cegah layar ikut bergulir saat mencoret di HP
+  canvas.addEventListener("touchstart", function (e) { e.preventDefault(); }, { passive: false });
+  canvas.addEventListener("touchmove", function (e) { e.preventDefault(); }, { passive: false });
+
+  $("clearBtn").addEventListener("click", function () {
+    ctx2d.clearRect(0, 0, canvas.width, canvas.height);
+  });
+
+  $("penSize").addEventListener("input", function () {
+    penSize = parseInt(this.value, 10);
+  });
+
+  var swatches = document.querySelectorAll(".swatch");
+  for (var s = 0; s < swatches.length; s++) {
+    swatches[s].addEventListener("click", function () {
+      penColor = this.getAttribute("data-color");
+      for (var t = 0; t < swatches.length; t++) { swatches[t].classList.remove("on"); }
+      this.classList.add("on");
+    });
+  }
+
+  window.addEventListener("resize", function () {
+    if ($("page-papan").classList.contains("active")) { setupCanvas(); }
+  });
+
+  /* =====================================================
+     Mulai
+     ===================================================== */
+  renderSchedule();
+  renderSavings();
+  renderHome();
+  drawTimer();
+})();
+</script>
+</body>
+</html>
