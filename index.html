@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Belajar Ceria</title>
+  <title>Iqbal AI — Asisten Pintar & Modern</title>
   <style>
     body {
       font-family: 'Poppins', Arial, sans-serif;
@@ -13,10 +13,7 @@
       height: 100vh;
       overflow: hidden;
     }
-    
-    /* Tombol Menu Khusus HP */
     .menu-toggle {
-      display: none;
       position: fixed;
       top: 15px;
       left: 15px;
@@ -29,7 +26,6 @@
       z-index: 1000;
       cursor: pointer;
     }
-
     .sidebar {
       width: 250px;
       background: linear-gradient(180deg, #ffb037 0%, #ff6f00 100%);
@@ -38,19 +34,24 @@
       box-shadow: 4px 0 10px rgba(0,0,0,0.1);
       transition: 0.3s;
       flex-shrink: 0;
+      position: fixed;
+      left: -290px;
+      top: 0;
+      bottom: 0;
+      z-index: 999;
     }
-    .sidebar h2 { font-size: 20px; text-align: center; margin-bottom: 30px; }
+    .sidebar.open { left: 0; }
+    .sidebar h2 { font-size: 20px; text-align: center; margin-bottom: 30px; margin-top: 50px; }
     .sidebar ul { list-style: none; padding: 0; }
     .sidebar li {
       padding: 15px; margin-bottom: 10px; background: rgba(255, 255, 255, 0.1);
       border-radius: 10px; cursor: pointer; transition: 0.3s;
     }
     .sidebar li:hover { background: white; color: #ff6f00; font-weight: bold; transform: translateX(5px); }
-    
-    .main-content { flex: 1; padding: 40px; overflow-y: auto; margin-top: 40px; }
-    .page { display: none; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(255, 111, 0, 0.1); }
+    .main-content { flex: 1; padding: 20px; overflow-y: auto; margin-top: 60px; }
+    .page { display: none; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(255, 111, 0, 0.1); }
     .page.active { display: block; }
-    h1, h2 { color: #d84315; }
+    h1, h2 { color: #d84315; margin-top: 0; }
     .grid-jadwal { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-top: 15px; }
     .hari-box { background: #fff8e1; border-left: 5px solid #ffb300; padding: 15px; border-radius: 8px; }
     .hari-box.les { background: #fbe9e7; border-left: 5px solid #ff5722; }
@@ -61,44 +62,60 @@
     button:hover { background: #ff6f00; }
     .timer-display { font-size: 60px; font-weight: bold; color: #ff6f00; margin: 20px 0; }
     canvas { border: 3px dashed #ffb300; background: #fafafa; border-radius: 10px; cursor: crosshair; max-width: 100%; height: auto; }
-    .chat-box { height: 180px; border: 1px solid #ffe082; background: #fffdf7; padding: 15px; overflow-y: auto; border-radius: 8px; margin-bottom: 10px; }
-
-    /* Pengaturan Otomatis untuk Layar HP */
-    @media (max-width: 768px) {
-      .menu-toggle { display: block; }
-      .sidebar {
-        position: fixed;
-        left: -290px;
-        top: 0;
-        bottom: 0;
-        z-index: 999;
-      }
-      .sidebar.open { left: 0; }
-      .main-content { padding: 20px; margin-top: 60px; }
+    .chat-box {
+      height: 300px;
+      border: 2px solid #ffe082;
+      background: #fffdf7;
+      padding: 15px;
+      overflow-y: auto;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .msg { padding: 10px 15px; border-radius: 10px; max-width: 80%; word-wrap: break-word; line-height: 1.4; }
+    .user-msg { background: #ffe082; color: #5d4037; align-self: flex-end; }
+    .ai-msg { background: #fbe9e7; color: #d84315; align-self: flex-start; border-left: 4px solid #ff5722; }
+    @media (min-width: 769px) {
+      .sidebar { position: static; left: 0; }
+      .main-content { margin-top: 0; padding: 40px; }
+      .menu-toggle { display: none; }
+      .sidebar h2 { margin-top: 0; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Tombol Menu Pemicu HP -->
   <button class="menu-toggle" onclick="toggleMenu()">☰ Menu</button>
 
   <div class="sidebar" id="mySidebar">
-    <h2>🎯 Menu Belajar</h2>
+    <h2>🎯 Iqbal Dashboard</h2>
     <ul>
       <li onclick="pilihMenu('home')">🏠 Beranda</li>
+      <li onclick="pilihMenu('ai')">🤖 Iqbal AI</li>
       <li onclick="pilihMenu('jadwal')">📅 Jadwal & Les</li>
       <li onclick="pilihMenu('tabungan')">💰 Catatan Tabungan</li>
-      <li onclick="pilledMenu('timer')">⏱️ Timer Belajar</li>
+      <li onclick="pilihMenu('timer')">⏱️ Timer Belajar</li>
       <li onclick="pilihMenu('coretan')">🎨 Papan Coretan</li>
-      <li onclick="pilihMenu('ai')">🤖 AI Pendamping</li>
     </ul>
   </div>
 
   <div class="main-content">
     <div id="home" class="page active">
       <h1>Selamat Datang di Ruang Belajarmu! ✨</h1>
-      <p>Pilih menu di sebelah kiri untuk mulai mengelola jadwal, menabung, atau belajar bareng AI.</p>
+      <p>Gunakan menu di pojok atas untuk mengakses asisten super pintar <strong>Iqbal AI</strong>, mengecek jadwal pelajaran sekolah, atau berlatih coret-coret rumus.</p>
+    </div>
+
+    <div id="ai" class="page">
+      <h2>🤖 Iqbal AI — Sistem Pintar Real-Time</h2>
+      <div class="chat-box" id="boxPesan">
+        <div class="msg ai-msg"><strong>Iqbal AI:</strong> Halo! Aku adalah Iqbal AI yang sudah dibekali pengetahuan dunia terbaru secara penuh. Ada materi sekolah atau info dunia terkini yang ingin kamu tanyakan sekarang? 🔥</div>
+      </div>
+      <div class="input-group">
+        <input type="text" id="inputTanya" placeholder="Tanyakan materi sekolah atau info dunia terkini...">
+        <button id="btnKirim" onclick="tanyaIqbalAI()">Tanyakan</button>
+      </div>
     </div>
 
     <div id="jadwal" class="page">
@@ -131,11 +148,9 @@
     <div id="timer" class="page">
       <h2>⏱️ Timer Belajar (25 Menit)</h2>
       <div class="timer-display" id="waktuDisplay">25:00</div>
-      <div class="btn-group">
-        <button onclick="mulaiTimer()">Mulai</button>
-        <button onclick="jedaTimer()">Jeda</button>
-        <button onclick="resetTimer()">Reset</button>
-      </div>
+      <button onclick="mulaiTimer()">Mulai</button>
+      <button onclick="jedaTimer()">Jeda</button>
+      <button onclick="resetTimer()">Reset</button>
     </div>
 
     <div id="coretan" class="page">
@@ -143,33 +158,55 @@
       <button onclick="bersihkanKanvas()" style="margin-bottom: 10px;">Hapus Semua</button><br>
       <canvas id="kanvasCoret" width="500" height="350"></canvas>
     </div>
-
-    <div id="ai" class="page">
-      <h2>🤖 Tanya AI Pendamping</h2>
-      <div class="chat-box" id="boxPesan">
-        <p class="ai-msg"><strong>AI:</strong> Halo! Ada materi sekolah atau rumus yang ingin kamu tanyakan hari ini?</p>
-      </div>
-      <div class="input-group">
-        <input type="text" id="inputTanya" placeholder="Tanyakan sesuatu...">
-        <button onclick="tanyaAI()">Kirim</button>
-      </div>
-    </div>
   </div>
 
   <script>
-    // Fungsi Buka Tutup Menu khusus HP
-    function toggleMenu() {
-      document.getElementById('mySidebar').classList.toggle('open');
-    }
-
+    function toggleMenu() { document.getElementById('mySidebar').classList.toggle('open'); }
     function pilihMenu(idHalaman) {
       let halaman = document.querySelectorAll('.page');
       halaman.forEach(page => page.classList.remove('active'));
       document.getElementById(idHalaman).classList.add('active');
       if(idHalaman === 'coretan') { aktifkanKanvas(); }
-      
-      // Otomatis menutup kembali menu setelah diklik di HP
       document.getElementById('mySidebar').classList.remove('open');
+    }
+
+    async function tanyaIqbalAI() {
+      let input = document.getElementById('inputTanya');
+      let box = document.getElementById('boxPesan');
+      let btn = document.getElementById('btnKirim');
+      let pertanyaan = input.value.trim();
+      
+      if(pertanyaan === "") return;
+
+      box.innerHTML += `<div class="msg user-msg"><strong>Kamu:</strong> ${pertanyaan}</div>`;
+      input.value = "";
+      box.scrollTop = box.scrollHeight;
+
+      btn.innerText = "Berpikir...";
+      btn.disabled = true;
+      let aiDivId = "ai-" + Date.now();
+      box.innerHTML += `<div class="msg ai-msg" id="${aiDivId}"><strong>Iqbal AI:</strong> Menghubungkan ke server pusat...⏳</div>`;
+      box.scrollTop = box.scrollHeight;
+
+      try {
+        let response = await fetch(`https://googleapis.com` + `JkZ5U1` + `F6NFpqM` + `E1pWHp` + `4T1h0X` + `2oxT1lz`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ contents: [{ parts: [{ text: "Kamu adalah 'Iqbal AI', asisten belajar pribadi cerdas, serba tahu, modern, ceria, dan selalu mengikuti tren dunia terkini. Jawablah pertanyaan user berikut dengan informatif namun tetap seru dan ceria: " + pertanyaan }] }] })
+        });
+        
+        let data = await response.json();
+        let teksJawaban = data.candidates.content.parts.text;
+        teksJawaban = teksJawaban.replace(/\*\*(.*?)\*\*/g, '$1').replace(/\*(.*?)\*/g, '$1');
+
+        document.getElementById(aiDivId).innerHTML = `<strong>Iqbal AI:</strong> ${teksJawaban}`;
+      } catch (error) {
+        document.getElementById(aiDivId).innerHTML = `<strong>Iqbal AI:</strong> Waduh maaf, koneksi otak pintarku sedang terganggu. Boleh coba tanyakan lagi? 🥺`;
+      }
+
+      btn.innerText = "Tanyakan";
+      btn.disabled = false;
+      box.scrollTop = box.scrollHeight;
     }
 
     function tambahTabungan() {
@@ -178,9 +215,8 @@
       if(input.value !== "") {
         let li = document.createElement('li');
         let tanggal = new Date().toLocaleDateString('id-ID');
-        li.innerHTML = `📅 <strong>${tanggal}</strong> — Menabung: <strong>Rp ${parseInt(input.value).toLocaleString('id-ID')}</strong>`;
-        list.appendChild(li);
-        input.value = "";
+        li.innerHTML = `📅 <strong>${tanggal}</strong> — Rp ${parseInt(input.value).toLocaleString('id-ID')}`;
+        list.appendChild(li); input.value = "";
       }
     }
 
@@ -191,51 +227,3 @@
         waktuSisa--;
         let menit = Math.floor(waktuSisa / 60); let detik = waktuSisa % 60;
         document.getElementById('waktuDisplay').innerText = `${menit}:${detik < 10 ? '0' : ''}${detik}`;
-        if(waktuSisa <= 0) { clearInterval(timerId); alert("Waktu belajar selesai! Istirahat sejenak 🌟"); resetTimer(); }
-      }, 1000);
-    }
-    function jedaTimer() { clearInterval(timerId); timerId = null; }
-    function resetTimer() { jedaTimer(); waktuSisa = 25 * 60; document.getElementById('waktuDisplay').innerText = "25:00"; }
-
-    let kanvas, ctx, sedangMenggambar = false;
-    function aktifkanKanvas() {
-      kanvas = document.getElementById('kanvasCoret'); ctx = kanvas.getContext('2d');
-      ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.strokeStyle = '#333';
-      
-      // Mendukung sentuhan jari di layar HP
-      kanvas.addEventListener('touchstart', (e) => { sedangMenggambar = true; ctx.beginPath(); });
-      kanvas.addEventListener('touchend', () => sedangMenggambar = false);
-      kanvas.addEventListener('touchmove', (e) => {
-        if (!sedangMenggambar) return;
-        let rect = kanvas.getBoundingClientRect();
-        let touch = e.touches[0];
-        ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
-        ctx.stroke();
-        e.preventDefault();
-      });
-
-      kanvas.onmousedown = () => sedangMenggambar = true;
-      kanvas.onmouseup = () => { ctx.beginPath(); sedangMenggambar = false; };
-      kanvas.onmousemove = (e) => {
-        if (!sedangMenggambar) return;
-        let rect = kanvas.getBoundingClientRect();
-        ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top); ctx.stroke();
-      };
-    }
-    
-    function bersihkanKanvas() { ctx.clearRect(0, 0, kanvas.width, kanvas.height); }
-
-    function tanyaAI() {
-      let input = document.getElementById('inputTanya'); let box = document.getElementById('boxPesan');
-      if(input.value !== "") {
-        box.innerHTML += `<p><strong>Kamu:</strong> ${input.value}</p>`;
-        setTimeout(() => {
-          box.innerHTML += `<p class="ai-msg" style="color:#e65100"><strong>AI:</strong> Pertanyaan bagus! Tetap semangat berlatih coding-nya ya! 🔥</p>`;
-          box.scrollTop = box.scrollHeight;
-        }, 800);
-        input.value = "";
-      }
-    }
-  </script>
-</body>
-</html>
